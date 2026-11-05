@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PANDA 🐼 | Information Retrieval Engine</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Light Mode Palette */
+            --bg-main: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-surface-hover: #f1f5f9;
+            --bg-glass: rgba(255, 255, 255, 0.85);
+            --border-color: #e2e8f0;
+            --border-hover: #cbd5e1;
+            
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-subtle: #94a3b8;
+            
+            --accent-primary: #10b981;
+            --accent-primary-hover: #059669;
+            --accent-light: #ecfdf5;
+            --accent-gradient: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            --shadow-glow: 0 0 25px rgba(16, 185, 129, 0.2);
+            
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 24px;
+            --radius-full: 9999px;
+            
+            --code-bg: #1e293b;
+            --code-text: #f8fafc;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode Palette (Cyber/ChatGPT Vibe) */
+            --bg-main: #0b0f19;
+            --bg-surface: #161e2e;
+            --bg-surface-hover: #1f293d;
+            --bg-glass: rgba(22, 30, 46, 0.85);
+            --border-color: #273549;
+            --border-hover: #374761;
+            
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-subtle: #64748b;
+            
+            --accent-primary: #10b981;
+            --accent-primary-hover: #34d399;
+            --accent-light: rgba(16, 185, 129, 0.15);
+            --accent-gradient: linear-gradient(135deg, #10b981 0%, #6366f1 100%);
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.25);
+            
+            --code-bg: #090d16;
+            --code-text: #34d399;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Navbar Header */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-badge {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text-muted);
+            background: transparent;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-main);
+            background: var(--bg-surface-hover);
+            border-color: var(--border-color);
+        }
+
+        .nav-btn-primary {
+            background: var(--accent-gradient);
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .nav-btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+        }
+
+        .theme-toggle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
+            background: var(--bg-surface);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background: var(--bg-surface-hover);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+            transform: rotate(15deg);
+        }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Utility animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">
+            <span style="font-size: 26px; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif;">&#128060;</span>
+            <span class="brand-badge">PANDA</span>
+            <span style="font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-full); background: var(--accent-light); color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.5px;">IR Engine v2.0</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/" class="nav-btn"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
+            <a href="/upload" class="nav-btn nav-btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Doc</a>
+            <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="main-wrapper">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages-wrapper animate-fade-in" style="max-width: 800px; margin: 20px auto 0; padding: 0 20px; width: 100%;">
+            {% for category, message in messages %}
+              <div class="flash-banner" style="padding: 12px 18px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; {% if category == 'error' %}background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444;{% else %}background: var(--accent-light); color: var(--accent-primary); border: 1px solid var(--accent-primary);{% endif %}">
+                <i class="fa-solid {% if category == 'error' %}fa-triangle-exclamation{% else %}fa-circle-check{% endif %}"></i> {{ message }}
+              </div>
+            {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        const toggleBtn = document.getElementById('theme-toggle');
+        const icon = toggleBtn.querySelector('i');
+        
+        // Theme switcher
+        const savedTheme = localStorage.getItem('panda_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+
+        toggleBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const target = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', target);
+            localStorage.setItem('panda_theme', target);
+            updateIcon(target);
+        });
+
+        function updateIcon(theme) {
+            if (theme === 'dark') {
+                icon.className = 'fa-solid fa-sun';
+                icon.style.color = '#fbbc05';
+            } else {
+                icon.className = 'fa-solid fa-moon';
+                icon.style.color = '#64748b';
+            }
+        }
+    </script>
+</body>
+</html>

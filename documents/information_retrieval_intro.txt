@@ -1,0 +1,1 @@
+Information retrieval is the science of searching for information in a document, searching for documents themselves, and also searching for the metadata that describes data. An information retrieval engine indexes documents using inverted indices, positional phrase queries, and vector space models like TF-IDF to deliver accurate, ranked search results to users.

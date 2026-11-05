@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .doc-page-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .doc-viewer-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+    }
+
+    .doc-header {
+        padding: 16px 24px;
+        background: var(--bg-main);
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .doc-viewer-title {
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .doc-viewer-body {
+        padding: 28px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        color: var(--code-text);
+        background: var(--code-bg);
+        overflow-x: auto;
+        min-height: 400px;
+    }
+</style>
+
+<div class="doc-page-container animate-fade-in">
+    <div class="doc-viewer-card">
+        <div class="doc-header">
+            <div class="doc-viewer-title">
+                <i class="fa-regular fa-file-lines" style="color: var(--accent-primary);"></i>
+                {{ filename }}
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="nav-btn" onclick="navigator.clipboard.writeText(document.querySelector('.doc-viewer-body').textContent); alert('Copied to clipboard!');">
+                    <i class="fa-regular fa-copy"></i> Copy Content
+                </button>
+            </div>
+        </div>
+
+        <div class="doc-viewer-body" id="doc-content-body">{{ content }}</div>
+    </div>
+</div>
+{% endblock %}

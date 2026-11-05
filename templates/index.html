@@ -1,0 +1,804 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Home View Styling */
+    .home-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 60px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .panda-mascot-wrapper {
+        position: relative;
+        margin-bottom: 16px;
+    }
+
+    .panda-icon-bg {
+        font-size: 84px;
+        line-height: 1;
+        filter: drop-shadow(0 10px 20px rgba(16, 185, 129, 0.2));
+        animation: floatPanda 4s ease-in-out infinite;
+        font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Symbol', sans-serif;
+        display: inline-block;
+    }
+
+    @keyframes floatPanda {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    .home-brand-name {
+        font-size: 56px;
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        margin-bottom: 8px;
+        line-height: 1.1;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', sans-serif;
+    }
+
+    .home-title {
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin-bottom: 36px;
+        max-width: 540px;
+        line-height: 1.3;
+    }
+
+    /* Floating Pill Search Bar */
+    .search-box-container {
+        width: 100%;
+        max-width: 680px;
+        position: relative;
+    }
+
+    .search-bar-form {
+        display: flex;
+        align-items: center;
+        background: var(--bg-surface);
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-full);
+        padding: 6px 8px 6px 20px;
+        box-shadow: var(--shadow-lg);
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .search-bar-form:focus-within, .search-bar-form:hover {
+        border-color: var(--accent-primary);
+        box-shadow: var(--shadow-glow), var(--shadow-lg);
+    }
+
+    .search-icon-left {
+        color: var(--text-subtle);
+        font-size: 18px;
+        margin-right: 12px;
+    }
+
+    .search-input-field {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-family: inherit;
+        font-size: 16px;
+        color: var(--text-main);
+        padding: 10px 0;
+    }
+
+    .search-input-field::placeholder {
+        color: var(--text-subtle);
+    }
+
+    .model-selector-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 12px;
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-full);
+        margin-right: 8px;
+    }
+
+    .model-select-dropdown {
+        background: transparent;
+        border: none;
+        outline: none;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+    }
+
+    .submit-search-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: var(--radius-full);
+        background: var(--accent-gradient);
+        border: none;
+        color: #ffffff;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .submit-search-btn:hover {
+        transform: scale(1.06);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
+    }
+
+    /* Quick Chips */
+    .quick-chips-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 24px;
+    }
+
+    .quick-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-full);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+    }
+
+    .quick-chip:hover {
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+        background: var(--accent-light);
+        transform: translateY(-1px);
+    }
+
+    .chip-tag {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: var(--bg-main);
+        color: var(--text-subtle);
+    }
+
+    /* Features Grid */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 16px;
+        width: 100%;
+        margin-top: 48px;
+    }
+
+    .feature-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        text-align: left;
+    }
+
+    .feature-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-sm);
+        background: var(--accent-light);
+        color: var(--accent-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .feature-title {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .feature-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.4;
+    }
+
+    /* RESULTS VIEW STYLING */
+    .results-page-header {
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--border-color);
+        background: var(--bg-surface);
+    }
+
+    .results-search-form {
+        max-width: 720px;
+    }
+
+    .results-layout {
+        max-width: 1300px;
+        margin: 0 auto;
+        padding: 32px 28px;
+        display: flex;
+        gap: 36px;
+    }
+
+    .results-content-area {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .results-meta-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .results-count {
+        font-size: 14px;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .pipeline-toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: var(--radius-full);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .pipeline-toggle-btn:hover {
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+    }
+
+    .result-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 20px 24px;
+        margin-bottom: 16px;
+        transition: all 0.2s ease;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .result-card:hover {
+        border-color: var(--border-hover);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+    }
+
+    .result-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+    }
+
+    .result-file-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--accent-primary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .result-file-title:hover {
+        text-decoration: underline;
+    }
+
+    .result-badges {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .badge-docid {
+        font-size: 11px;
+        font-weight: 700;
+        font-family: 'JetBrains Mono', monospace;
+        padding: 3px 8px;
+        border-radius: 4px;
+        background: var(--bg-main);
+        color: var(--text-muted);
+        border: 1px solid var(--border-color);
+    }
+
+    .badge-score {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: var(--radius-full);
+        background: var(--accent-light);
+        color: var(--accent-primary);
+    }
+
+    .result-snippet-text {
+        font-size: 14px;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 16px;
+    }
+
+    .snippet-highlight {
+        background: rgba(16, 185, 129, 0.25);
+        color: var(--accent-primary);
+        font-weight: 700;
+        padding: 1px 5px;
+        border-radius: 4px;
+    }
+
+    [data-theme="dark"] .snippet-highlight {
+        background: rgba(52, 211, 153, 0.25);
+        color: #34d399;
+    }
+
+    .result-card-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .action-link {
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        color: var(--text-main);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .action-link:hover {
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+    }
+
+    /* STEPPER PIPELINE DRAWER */
+    .pipeline-drawer {
+        width: 380px;
+        flex-shrink: 0;
+        display: none;
+    }
+
+    .pipeline-drawer.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .pipeline-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 24px;
+        position: sticky;
+        top: 90px;
+        box-shadow: var(--shadow-md);
+    }
+
+    .pipeline-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .pipeline-title {
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .stepper-item {
+        position: relative;
+        padding-left: 28px;
+        padding-bottom: 20px;
+    }
+
+    .stepper-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .stepper-item::before {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 20px;
+        bottom: 0;
+        width: 2px;
+        background: var(--border-color);
+    }
+
+    .stepper-item:last-child::before {
+        display: none;
+    }
+
+    .stepper-dot {
+        position: absolute;
+        left: 0;
+        top: 2px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--accent-light);
+        border: 2px solid var(--accent-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        color: var(--accent-primary);
+    }
+
+    .stepper-step-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 4px;
+    }
+
+    .stepper-step-detail {
+        font-size: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--accent-primary);
+        background: var(--code-bg);
+        padding: 6px 10px;
+        border-radius: 6px;
+        word-break: break-all;
+    }
+
+    /* Modal for Quick View */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .modal-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        width: 100%;
+        max-width: 740px;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .modal-body {
+        padding: 24px;
+        overflow-y: auto;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        color: var(--text-main);
+    }
+</style>
+
+{% if not query %}
+    <!-- LANDING PAGE HOME VIEW -->
+    <div class="home-container animate-fade-in">
+        <div class="panda-mascot-wrapper">
+            <div class="panda-icon-bg">&#128060;</div>
+        </div>
+
+        <h1 class="home-brand-name">PANDA &#128060;</h1>
+        <h2 class="home-title">Search anything in your <span class="brand-badge">Corpus</span></h2>
+
+        <div class="search-box-container">
+            <form class="search-bar-form" method="POST" action="/">
+                <i class="fa-solid fa-magnifying-glass search-icon-left"></i>
+                <input type="text" name="query" class="search-input-field" placeholder="Enter keyword, exact phrase &quot;like this&quot;, or wildcards (mach*)..." autofocus required>
+                
+                <div class="model-selector-wrapper">
+                    <i class="fa-solid fa-sliders" style="font-size: 11px; color: var(--text-subtle);"></i>
+                    <select name="model" class="model-select-dropdown">
+                        <option value="tfidf">TF-IDF Ranked</option>
+                        <option value="boolean">Boolean AND</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-search-btn" title="Run Query">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- Quick Chips -->
+        <div class="quick-chips-container">
+            <div class="quick-chip" onclick="runQuickSearch('natural language processing')">
+                <span class="chip-tag">Phrase</span> natural language processing
+            </div>
+            <div class="quick-chip" onclick="runQuickSearch('&quot;machine learning&quot;')">
+                <span class="chip-tag">Exact</span> "machine learning"
+            </div>
+            <div class="quick-chip" onclick="runQuickSearch('mach*')">
+                <span class="chip-tag">Wildcard</span> mach*
+            </div>
+            <div class="quick-chip" onclick="runQuickSearch('enine')">
+                <span class="chip-tag">Typo Fix</span> enine
+            </div>
+        </div>
+
+        <!-- Feature Capabilities Grid -->
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                <div class="feature-title">TF-IDF Vector Ranking</div>
+                <div class="feature-desc">Mathematical relevance scoring based on term & inverse document frequency.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-asterisk"></i></div>
+                <div class="feature-title">Permuterm Wildcard</div>
+                <div class="feature-desc">Instant resolution of wildcard prefix/suffix patterns like mach*.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-quote-left"></i></div>
+                <div class="feature-title">Positional Phrases</div>
+                <div class="feature-desc">Backend positional index for quoted exact phrase queries.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <div class="feature-title">Tolerant Spelling</div>
+                <div class="feature-desc">Dynamic Levenshtein edit distance logic to automatically heal typos.</div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <!-- RESULTS PAGE VIEW -->
+    <div class="results-page-header">
+        <div class="search-box-container results-search-form">
+            <form class="search-bar-form" method="POST" action="/">
+                <i class="fa-solid fa-magnifying-glass search-icon-left"></i>
+                <input type="text" name="query" class="search-input-field" value="{{ query }}" required>
+                
+                <div class="model-selector-wrapper">
+                    <i class="fa-solid fa-sliders" style="font-size: 11px; color: var(--text-subtle);"></i>
+                    <select name="model" class="model-select-dropdown">
+                        <option value="tfidf" {% if model == 'tfidf' %}selected{% endif %}>TF-IDF Ranked</option>
+                        <option value="boolean" {% if model == 'boolean' %}selected{% endif %}>Boolean AND</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-search-btn">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="results-layout">
+        <div class="results-content-area">
+            <div class="results-meta-bar">
+                <div class="results-count">
+                    Found <strong>{{ results|length }}</strong> matching document(s) using <span style="text-transform: uppercase; color: var(--accent-primary); font-weight:700;">{{ model }}</span>
+                </div>
+                <button class="pipeline-toggle-btn" onclick="togglePipeline()">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span id="pipeline-btn-text">View Retrieval Logic</span>
+                </button>
+            </div>
+
+            {% if results %}
+                {% for result in results %}
+                    <div class="result-card animate-fade-in">
+                        <div class="result-card-header">
+                            <a href="/document/{{ result.doc_id }}" target="_blank" class="result-file-title">
+                                <i class="fa-regular fa-file-lines"></i>
+                                {{ result.filename }}
+                            </a>
+                            <div class="result-badges">
+                                <span class="badge-docid">ID: {{ result.doc_id }}</span>
+                                {% if model == 'tfidf' %}
+                                    <span class="badge-score"><i class="fa-solid fa-chart-simple"></i> Score: {{ result.score }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="result-snippet-text">
+                            {{ result.snippet | safe }}
+                        </div>
+
+                        <div class="result-card-actions">
+                            <a href="/document/{{ result.doc_id }}" target="_blank" class="action-link">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Full Document
+                            </a>
+                            <button class="action-link" onclick="quickViewDoc({{ result.doc_id }}, '{{ result.filename }}')">
+                                <i class="fa-regular fa-eye"></i> Quick Preview
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="result-card" style="text-align: center; padding: 48px 24px;">
+                    <div style="font-size: 48px; margin-bottom: 12px;">🔍</div>
+                    <h3 style="margin-bottom: 8px;">No matching documents found</h3>
+                    <p style="color: var(--text-muted); font-size: 14px; max-width: 400px; margin: 0 auto 20px;">We couldn't find any documents containing "<strong>{{ query }}</strong>" in your corpus.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- STEPPER PIPELINE DRAWER -->
+        <div class="pipeline-drawer" id="pipeline-drawer">
+            <div class="pipeline-card">
+                <div class="pipeline-header">
+                    <div class="pipeline-title">
+                        <i class="fa-solid fa-cpu" style="color: var(--accent-primary);"></i>
+                        Retrieval Pipeline
+                    </div>
+                    <span style="font-size: 11px; font-weight: 700; color: var(--accent-primary); background: var(--accent-light); padding: 2px 8px; border-radius: 12px;">Trace</span>
+                </div>
+
+                <div class="stepper-list">
+                    {% for log in process_log %}
+                        <div class="stepper-item">
+                            <div class="stepper-dot">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div class="stepper-step-name">{{ log.step }}</div>
+                            <div class="stepper-step-detail">{{ log.detail }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<!-- Quick View Modal -->
+<div class="modal-overlay" id="quick-view-modal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <div style="font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-regular fa-file-lines" style="color: var(--accent-primary);"></i>
+                <span id="modal-filename">Document</span>
+            </div>
+            <button class="theme-toggle-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body" id="modal-content">
+            Loading document content...
+        </div>
+    </div>
+</div>
+
+<script>
+    function runQuickSearch(term) {
+        const input = document.querySelector('.search-input-field');
+        const form = document.querySelector('.search-bar-form');
+        input.value = term;
+        form.submit();
+    }
+
+    function togglePipeline() {
+        const drawer = document.getElementById('pipeline-drawer');
+        const btnText = document.getElementById('pipeline-btn-text');
+        drawer.classList.toggle('active');
+        if (drawer.classList.contains('active')) {
+            btnText.textContent = 'Hide Retrieval Logic';
+        } else {
+            btnText.textContent = 'View Retrieval Logic';
+        }
+    }
+
+    function quickViewDoc(docId, filename) {
+        const modal = document.getElementById('quick-view-modal');
+        const title = document.getElementById('modal-filename');
+        const content = document.getElementById('modal-content');
+        
+        title.textContent = filename;
+        content.textContent = 'Fetching document content...';
+        modal.style.display = 'flex';
+
+        fetch('/document/' + docId)
+            .then(res => res.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const body = doc.querySelector('.doc-viewer-body') || doc.querySelector('.doc-body');
+                if (body) {
+                    let text = body.textContent.trim();
+                    const queryInput = document.querySelector('.search-input-field');
+                    if (queryInput && queryInput.value) {
+                        const cleanPhrase = queryInput.value.replace(/["']/g, '').trim();
+                        if (cleanPhrase.length > 1) {
+                            const regFull = new RegExp('(' + escapeRegExp(cleanPhrase) + ')', 'gi');
+                            text = text.replace(regFull, '<mark class="snippet-highlight">$1</mark>');
+                        }
+                        const terms = cleanPhrase.split(/\s+/).filter(t => t.length > 1);
+                        terms.forEach(t => {
+                            if (!t.includes('*')) {
+                                const reg = new RegExp('\\b(' + escapeRegExp(t) + ')\\b', 'gi');
+                                text = text.replace(reg, '<mark class="snippet-highlight">$1</mark>');
+                            }
+                        });
+                        content.innerHTML = text;
+                    } else {
+                        content.textContent = text;
+                    }
+                } else {
+                    content.textContent = html;
+                }
+            })
+            .catch(err => {
+                content.textContent = 'Error loading document content.';
+            });
+    }
+
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function closeModal() {
+        document.getElementById('quick-view-modal').style.display = 'none';
+    }
+
+    window.onclick = function(e) {
+        const modal = document.getElementById('quick-view-modal');
+        if (e.target === modal) {
+            closeModal();
+        }
+    }
+</script>
+{% endblock %}

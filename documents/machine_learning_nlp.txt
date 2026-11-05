@@ -1,0 +1,1 @@
+Machine learning and natural language processing empower modern information engines to process human language at scale. By leveraging tokenization, morphological stemming algorithms like the Porter stemmer, and tolerant spelling correction with Levenshtein distance, engines can bridge human inquiries with relevant document corpora.
